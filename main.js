@@ -26,7 +26,11 @@ document.querySelectorAll('.drop-zone__input').forEach(inputElement => {
 });
 
 function updateThumbnail(dropZoneElement, file) {
-  const thumbnailElement = dropZoneElement.querySelector('.drop-zone__thumb');
+  let thumbnailElement = dropZoneElement.querySelector('.drop-zone__thumb');
+
+  if (dropZoneElement.querySelector('.drop-zone__prompt')) {
+    dropZoneElement.querySelector('.drop-zone__prompt').remove();
+  }
 
   // First time there's no thumbnail element, so lets create it
   if (!thumbnailElement) {
@@ -34,4 +38,6 @@ function updateThumbnail(dropZoneElement, file) {
     thumbnailElement.classList.add('drop-zone__thumb');
     dropZoneElement.appendChild(thumbnailElement);
   }
+
+  thumbnailElement.dataset.label = file.name;
 }
