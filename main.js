@@ -1,6 +1,16 @@
 document.querySelectorAll('.drop-zone__input').forEach(inputElement => {
   const dropZoneElement = inputElement.closest('.drop-zone');
 
+  dropZoneElement.addEventListener('click', e => {
+    inputElement.click();
+  });
+
+  inputElement.addEventListener('change', e => {
+    if (inputElement.files.length) {
+      updateThumbnail(dropZoneElement, inputElement.files[0]);
+    }
+  });
+
   dropZoneElement.addEventListener('dragover', e => {
     e.preventDefault();
     dropZoneElement.classList.add('drop-zone--over');
@@ -25,6 +35,11 @@ document.querySelectorAll('.drop-zone__input').forEach(inputElement => {
   });
 });
 
+/*
+ * @param {HTMLElement} dropZoneElement
+ * @param {File} file
+ */
+
 function updateThumbnail(dropZoneElement, file) {
   let thumbnailElement = dropZoneElement.querySelector('.drop-zone__thumb');
 
@@ -40,4 +55,15 @@ function updateThumbnail(dropZoneElement, file) {
   }
 
   thumbnailElement.dataset.label = file.name;
+
+  // Show thumbnail for image files
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      thumbnailElement.style.backgroundImage = `url(${reader.result})`;
+    };
+  } else {
+    thumbnailElement.style.backgroundImage = null;
+  }
 }
